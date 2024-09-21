@@ -18,7 +18,8 @@ I've considered that:
 | `StartsAt`   | `DATETIME`   | `` | Timestamp when the contest will start |
 | `EndsAt`   | `DATETIME`   | `` | Timestamp when the contest will end |
 
-### Sessions_Players Table: Relation of Players and Sessions
+### Sessions_Players Table
+Relation of Players and Sessions
 
 | Column Name  | Data Type                     | Constraints                                 | Description                                   |
 |--------------|-------------------------------|---------------------------------------------|-----------------------------------------------|
@@ -29,6 +30,17 @@ I've considered that:
 | `Score`      | `INT`                         | `DEFAULT 0`                                 | Score of the player in the contest            |
 | `CreatedAt`  | `DATETIME`                    | `DEFAULT CURRENT_TIMESTAMP`                 | Timestamp when the record was created         |
 | `UpdatedAt`  | `DATETIME`                    | `DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP` | Timestamp when the record was last updated    |
+
+## Queued_Players Table
+
+This table contains players' requests to join a session.
+
+| Column Name   | Data Type  | Constraints                             | Description                                             |
+|---------------|------------|-----------------------------------------|---------------------------------------------------------|
+| `Id`          | `UUID`     | `PRIMARY KEY`                           | Unique identifier for each request                      |
+| `Player_id`   | `UUID`     | `UNIQUE`                                | ID of the player requesting to join a session           |
+| `LatencyLevel`| `INT`      | `CHECK(LatencyLevel >= 1 AND LatencyLevel <= 5)` | Latency level of the player (1 to 5, where 1 is best)   |
+| `CreatedAt`   | `DATETIME` | `DEFAULT CURRENT_TIMESTAMP`             | Timestamp when the request was created                  |
 
 
 # Code Design and Architecture
