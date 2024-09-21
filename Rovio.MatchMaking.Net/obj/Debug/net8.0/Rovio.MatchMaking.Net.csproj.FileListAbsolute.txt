@@ -143,3 +143,6 @@
 /Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
 /Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/bin/Debug/net8.0/MySqlConnector.dll
 /Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/bin/Debug/net8.0/Pomelo.EntityFrameworkCore.MySql.dll
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/bin/Debug/net8.0/Microsoft.Extensions.Configuration.FileExtensions.dll
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/bin/Debug/net8.0/Rovio.MatchMaking.Repositories.dll
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/bin/Debug/net8.0/Rovio.MatchMaking.Repositories.pdb
