@@ -3,7 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Rovio.MatchMaking;
 using Rovio.MatchMaking.Net;
-using Rovio.MatchMaking.Net.Data;
+using Rovio.MatchMaking.Repositories.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +20,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
+builder.Services.AddScoped<IQueuedPlayerRepository, QueuedPlayerRepository>();
+
 
 builder.Services.AddHttpContextAccessor();
 

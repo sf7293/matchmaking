@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Rovio.MatchMaking;
 
-namespace Rovio.MatchMaking.Net.Data // Update the namespace as per your project structure
+namespace Rovio.MatchMaking.Repositories.Data
 {
     public class AppDbContext : DbContext
     {
@@ -25,9 +24,6 @@ namespace Rovio.MatchMaking.Net.Data // Update the namespace as per your project
             modelBuilder.Entity<QueuedPlayer>()
                 .Property(e => e.PlayerId)
                 .HasColumnType("char(36)");
-
-            // modelBuilder.Entity<Session>().HasKey(s => s.SessionId);
-            // modelBuilder.Entity<QueuedPlayer>().HasKey(q => q.Id);
         }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Rovio.MatchMaking.Net.Migrations
+namespace Rovio.MatchMaking.Repositories.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

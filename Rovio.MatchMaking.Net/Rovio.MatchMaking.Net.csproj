@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Rovio.MatchMaking\Rovio.MatchMaking.csproj" />
+      <ProjectReference Include="..\Rovio.MatchMaking.Repositories\Rovio.MatchMaking.Repositories.csproj" />
     </ItemGroup>
 
 </Project>

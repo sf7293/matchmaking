@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Rovio.MatchMaking.Net.Data;
+using Rovio.MatchMaking.Repositories.Data;
 
 #nullable disable
 
-namespace Rovio.MatchMaking.Net.Migrations
+namespace Rovio.MatchMaking.Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240921135033_InitialCreate")]
+    [Migration("20240921144431_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,6 +24,26 @@ namespace Rovio.MatchMaking.Net.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("QueuedPlayer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("LatencyLevel")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PlayerId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QueuedPlayers");
+                });
 
             modelBuilder.Entity("Rovio.MatchMaking.Player", b =>
                 {
@@ -46,26 +66,6 @@ namespace Rovio.MatchMaking.Net.Migrations
                     b.HasIndex("SessionId");
 
                     b.ToTable("Player");
-                });
-
-            modelBuilder.Entity("Rovio.MatchMaking.QueuedPlayer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("LatencyLevel")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PlayerId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("QueuedPlayers");
                 });
 
             modelBuilder.Entity("Rovio.MatchMaking.Session", b =>
