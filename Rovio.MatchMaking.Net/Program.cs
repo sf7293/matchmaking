@@ -1,9 +1,16 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Rovio.MatchMaking;
 using Rovio.MatchMaking.Net;
+using Rovio.MatchMaking.Net.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Register the DbContext with DI
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    new MySqlServerVersion(new Version(8, 0, 21))));
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(b => { b.RegisterModule<MatchMakingModule>(); });

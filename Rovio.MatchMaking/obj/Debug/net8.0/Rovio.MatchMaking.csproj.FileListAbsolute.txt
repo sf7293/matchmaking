@@ -1,0 +1,12 @@
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/bin/Debug/net8.0/Rovio.MatchMaking.deps.json
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/bin/Debug/net8.0/Rovio.MatchMaking.dll
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/bin/Debug/net8.0/Rovio.MatchMaking.pdb
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/Rovio.MatchMaking.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/Rovio.MatchMaking.AssemblyInfoInputs.cache
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/Rovio.MatchMaking.AssemblyInfo.cs
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/Rovio.MatchMaking.csproj.CoreCompileInputs.cache
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/Rovio.MatchMaking.sourcelink.json
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/Rovio.MatchMaking.dll
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/refint/Rovio.MatchMaking.dll
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/Rovio.MatchMaking.pdb
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/Debug/net8.0/ref/Rovio.MatchMaking.dll
