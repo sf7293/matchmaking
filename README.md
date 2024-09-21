@@ -12,12 +12,23 @@ I've considered that:
 | Column Name   | Data Type    | Constraints           | Description                     |
 |---------------|--------------|-----------------------|---------------------------------|
 | `Id`          | `UUID`       | `PRIMARY KEY`         | Unique identifier for each session |
-| `Name`        | `VARCHAR(50)`| `NOT NULL`            | Name of the player              |
 | `LatencyLevel`  | `INT`        | `CHECK(LatencyLevel >= 1)` | Latency level of the player (1 to 5) |
 | `JoinedCount`  | `INT`        | `DEFAULT 0 CHECK(JoinedCount <= 10)` | Number of players joined the session |
 | `CreatedAt`   | `DATETIME`   | `DEFAULT CURRENT_TIMESTAMP` | Timestamp when the record was created |
 | `StartsAt`   | `DATETIME`   | `` | Timestamp when the contest will start |
 | `EndsAt`   | `DATETIME`   | `` | Timestamp when the contest will end |
+
+### Sessions_Players Table: Relation of Players and Sessions
+
+| Column Name  | Data Type                     | Constraints                                 | Description                                   |
+|--------------|-------------------------------|---------------------------------------------|-----------------------------------------------|
+| `Id`         | `UUID`                        | `PRIMARY KEY`                               | Unique identifier for each session            |
+| `Session_id` | `UUID`                        | `NOT NULL`                                  | ID of the session the player is attending     |
+| `Player_id`  | `UUID`                        | `NOT NULL`                                  | ID of the player attending the session        |
+| `Status`     | `ENUM('ATTENDED','PLAYED','LEFT')` | `DEFAULT 'ATTENDED'`                         | Status of the player in the session           |
+| `Score`      | `INT`                         | `DEFAULT 0`                                 | Score of the player in the contest            |
+| `CreatedAt`  | `DATETIME`                    | `DEFAULT CURRENT_TIMESTAMP`                 | Timestamp when the record was created         |
+| `UpdatedAt`  | `DATETIME`                    | `DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP` | Timestamp when the record was last updated    |
 
 
 # Code Design and Architecture
