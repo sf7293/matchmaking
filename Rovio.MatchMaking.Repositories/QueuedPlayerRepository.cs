@@ -20,6 +20,11 @@ public class QueuedPlayerRepository : IQueuedPlayerRepository
         return await _context.QueuedPlayers.FindAsync(id);
     }
 
+    public async Task<QueuedPlayer> GetQueuedPlayerByPlayerIdAsync(Guid playerId)
+    {
+        return await _context.QueuedPlayers.FirstOrDefaultAsync(qp => qp.PlayerId == playerId);
+    }
+
     public async Task<QueuedPlayer> CreateQueuedPlayerAsync(QueuedPlayer queuedPlayer)
     {
         queuedPlayer.Id = Guid.NewGuid(); // Assign a new unique ID

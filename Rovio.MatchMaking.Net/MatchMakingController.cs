@@ -17,12 +17,19 @@ public class MatchMakingController : Controller
     }
 
     [HttpPost("queue")]
-    public async Task<IActionResult> QueuePlayerAsync(Player player)
+    public async Task<IActionResult> QueuePlayerAsync([FromBody] Player player)
     {
-        // throw new NotImplementedException();
+            // throw new NotImplementedException();
             if (player == null)
             {
-                return BadRequest("Player cannot be null");
+                return BadRequest(new { error = "Player cannot be null" });
+            }
+
+            // Check if the player is already queued
+            var existingQueuedPlayer = await _queuedPlayerRepository.GetQueuedPlayerByPlayerIdAsync(player.Id);
+            if (existingQueuedPlayer != null)
+            {
+                return BadRequest(new { error = "Player is already queued" });
             }
 
             // Log Player properties to the console
@@ -34,7 +41,7 @@ public class MatchMakingController : Controller
             // await _sessionFactory.QueuePlayerAsync(player);
             // await _sessionFactory.Create();
 
-            return Ok("Player queued successfully");
+            return Ok(new { message = "Player queued successfully" });
     }
     
     [HttpPost("dequeue")]
