@@ -33,47 +33,23 @@ namespace Rovio.MatchMaking.Repositories.Migrations
                 name: "Sessions",
                 columns: table => new
                 {
-                    SessionId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sessions", x => x.SessionId);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Player",
-                columns: table => new
-                {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    LatencyMilliseconds = table.Column<int>(type: "int", nullable: false),
-                    SessionId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    LatencyLevel = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                    JoinedCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    StartsAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    EndsAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Player", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Player_Sessions_SessionId",
-                        column: x => x.SessionId,
-                        principalTable: "Sessions",
-                        principalColumn: "SessionId");
+                    table.PrimaryKey("PK_Sessions", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Player_SessionId",
-                table: "Player",
-                column: "SessionId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Player");
-
             migrationBuilder.DropTable(
                 name: "QueuedPlayers");
 

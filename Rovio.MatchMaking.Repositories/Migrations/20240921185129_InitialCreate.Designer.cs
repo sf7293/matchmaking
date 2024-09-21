@@ -12,7 +12,7 @@ using Rovio.MatchMaking.Repositories.Data;
 namespace Rovio.MatchMaking.Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240921144431_InitialCreate")]
+    [Migration("20240921185129_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -45,50 +45,36 @@ namespace Rovio.MatchMaking.Repositories.Migrations
                     b.ToTable("QueuedPlayers");
                 });
 
-            modelBuilder.Entity("Rovio.MatchMaking.Player", b =>
+            modelBuilder.Entity("Session", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("LatencyMilliseconds")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("EndsAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<Guid?>("SessionId")
-                        .HasColumnType("char(36)");
+                    b.Property<int>("JoinedCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasAnnotation("SqlServer:Check", "JoinedCount <= 10");
+
+                    b.Property<int>("LatencyLevel")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1)
+                        .HasAnnotation("SqlServer:Check", "LatencyLevel >= 1");
+
+                    b.Property<DateTime>("StartsAt")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SessionId");
-
-                    b.ToTable("Player");
-                });
-
-            modelBuilder.Entity("Rovio.MatchMaking.Session", b =>
-                {
-                    b.Property<Guid>("SessionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("SessionId");
-
                     b.ToTable("Sessions");
-                });
-
-            modelBuilder.Entity("Rovio.MatchMaking.Player", b =>
-                {
-                    b.HasOne("Rovio.MatchMaking.Session", null)
-                        .WithMany("Players")
-                        .HasForeignKey("SessionId");
-                });
-
-            modelBuilder.Entity("Rovio.MatchMaking.Session", b =>
-                {
-                    b.Navigation("Players");
                 });
 #pragma warning restore 612, 618
         }
