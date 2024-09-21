@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Rovio.MatchMaking;
 using Rovio.MatchMaking.Net;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
+builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
+
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Rovio.MatchMaking.Net.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a85bddbd0d3db2bfccd2a70b655fa7caf58379d2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Rovio.MatchMaking.Net.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Rovio.MatchMaking.Net.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
