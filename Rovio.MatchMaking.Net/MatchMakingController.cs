@@ -19,34 +19,48 @@ public class MatchMakingController : Controller
     [HttpPost("queue")]
     public async Task<IActionResult> QueuePlayerAsync([FromBody] Player player)
     {
-            // throw new NotImplementedException();
-            if (player == null)
-            {
-                return BadRequest(new { error = "Player cannot be null" });
-            }
+        // throw new NotImplementedException();
+        if (player == null)
+        {
+            return BadRequest(new { error = "Player cannot be null" });
+        }
 
-            // Check if the player is already queued
-            var existingQueuedPlayer = await _queuedPlayerRepository.GetQueuedPlayerByPlayerIdAsync(player.Id);
-            if (existingQueuedPlayer != null)
-            {
-                return BadRequest(new { error = "Player is already queued" });
-            }
+        // Check if the player is already queued
+        var existingQueuedPlayer = await _queuedPlayerRepository.GetQueuedPlayerByPlayerIdAsync(player.Id);
+        if (existingQueuedPlayer != null)
+        {
+            return BadRequest(new { error = "Player is already queued" });
+        }
 
-            // Log Player properties to the console
-            Console.WriteLine($"Player Queued: ID = {player.Id}, Name = {player.Name}, Latency = {player.LatencyMilliseconds}");
-            
-            var queuedPlayer = QueuedPlayer.CreateQueuedPlayerFromPlayer(player);
-            var createdQueuedPlayer = await _queuedPlayerRepository.CreateQueuedPlayerAsync(queuedPlayer);
-            // Assuming the sessionFactory handles the logic for queuing a player
-            // await _sessionFactory.QueuePlayerAsync(player);
-            // await _sessionFactory.Create();
+        // Log Player properties to the console
+        Console.WriteLine($"Player Queued: ID = {player.Id}, Name = {player.Name}, Latency = {player.LatencyMilliseconds}");
+        
+        var queuedPlayer = QueuedPlayer.CreateQueuedPlayerFromPlayer(player);
+        var createdQueuedPlayer = await _queuedPlayerRepository.CreateQueuedPlayerAsync(queuedPlayer);
+        // Assuming the sessionFactory handles the logic for queuing a player
+        // await _sessionFactory.QueuePlayerAsync(player);
+        // await _sessionFactory.Create();
 
-            return Ok(new { message = "Player queued successfully" });
+        return Ok(new { message = "Player queued successfully" });
     }
     
     [HttpPost("dequeue")]
-    public async Task DequeuePlayerAsync(Player player)
+    public async Task<IActionResult> DequeuePlayerAsync([FromBody] Player player)
     {
-        throw new NotImplementedException();
+        if (player == null)
+        {
+            return BadRequest(new { error = "Player cannot be null" });
+        }
+
+        // Check if the player is already queued
+        var queuedPlayer = await _queuedPlayerRepository.GetQueuedPlayerByPlayerIdAsync(player.Id);
+        if (queuedPlayer == null)
+        {
+            return BadRequest(new { error = "Player is not queued" });
+        }
+
+        await _queuedPlayerRepository.DeleteQueuedPlayerAsync(queuedPlayer.Id);
+
+        return Ok(new { message = "Player dequeued successfully" });
     }
 }

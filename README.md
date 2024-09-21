@@ -1,7 +1,7 @@
 # Assumptions
 
 I have made the following assumptions:
-
+- I have considered that this service will be called internally by other services, So it would be safe to call for example QueuePlayer method with the PlayerId give in the REST API. While if it's called by users directly we should have some Authentication methods and don't accept playerId from body of the request.
 - **Session Definition:** A session is a competitive environment where 2 to 10 players can participate. A player can only be part of one session at a time until it concludes.
 - **Session Joining:** Players must either leave their current contest or wait for it to finish before joining a new session.
 - **Session Timing:** A session begins at a specified timestamp if at least two players are available and ends after a pre-determined duration from the start time.
