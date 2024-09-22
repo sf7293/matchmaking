@@ -19,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
+// builder.Services.AddSingleton<ISessionFactory, SessionFactory>();
 builder.Services.AddScoped<IQueuedPlayerRepository, QueuedPlayerRepository>();
 
 

@@ -8,11 +8,9 @@ namespace Rovio.MatchMaking.Net;
 public class MatchMakingController : Controller
 {
     // Assuming there's already an injected service/repository to handle queuing
-    private readonly ISessionFactory _sessionFactory;
     private readonly IQueuedPlayerRepository _queuedPlayerRepository;
-    public MatchMakingController(ISessionFactory sessionFactory, IQueuedPlayerRepository queuedPlayerRepository)
+    public MatchMakingController(IQueuedPlayerRepository queuedPlayerRepository)
     {
-        _sessionFactory = sessionFactory;
         _queuedPlayerRepository = queuedPlayerRepository;
     }
 

@@ -45,7 +45,7 @@ public class SessionRepository : ISessionRepository
         return session;
     }
 
-    public async Task<SessionPlayer> AddPlayerToSessionAsync(Guid sessionId, Player player)
+    public async Task<SessionPlayer> AddPlayerToSessionAsync(Guid sessionId, Guid playerId)
     {
         // Check if the session exists
         var session = await _context.Sessions.FindAsync(sessionId);
@@ -62,7 +62,7 @@ public class SessionRepository : ISessionRepository
 
         // Check if the player is already in the session
         var existingSessionPlayer = await _context.SessionPlayers
-            .FirstOrDefaultAsync(sp => sp.SessionId == sessionId && sp.PlayerId == player.Id);
+            .FirstOrDefaultAsync(sp => sp.SessionId == sessionId && sp.PlayerId == playerId);
         if (existingSessionPlayer != null)
         {
             throw new InvalidOperationException("Player is already in the session.");
@@ -73,7 +73,7 @@ public class SessionRepository : ISessionRepository
         {
             Id = Guid.NewGuid(),
             SessionId = sessionId,
-            PlayerId = player.Id,
+            PlayerId = playerId,
             Status = "ATTENDED",
             Score = 0,
             CreatedAt = DateTime.UtcNow,
@@ -89,11 +89,11 @@ public class SessionRepository : ISessionRepository
         return sessionPlayer;
     }
 
-    public async Task<SessionPlayer> RemovePlayerFromSessionAsync(Guid sessionId, Player player)
+    public async Task<SessionPlayer> RemovePlayerFromSessionAsync(Guid sessionId, Guid playerId)
     {
         // Find the session player entry
         var sessionPlayer = await _context.SessionPlayers
-            .FirstOrDefaultAsync(sp => sp.SessionId == sessionId && sp.PlayerId == player.Id);
+            .FirstOrDefaultAsync(sp => sp.SessionId == sessionId && sp.PlayerId == playerId);
         if (sessionPlayer == null)
         {
             throw new ArgumentException("Player is not in the session.");

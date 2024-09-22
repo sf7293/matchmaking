@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Rovio.MatchMaking;
 using Rovio.MatchMaking.Repositories.Data;
 
 public class QueuedPlayerRepository : IQueuedPlayerRepository

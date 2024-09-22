@@ -1,4 +1,4 @@
-using Rovio.MatchMaking;
+namespace Rovio.MatchMaking;
 
 public interface IQueuedPlayerRepository
 {
