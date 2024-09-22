@@ -4,7 +4,7 @@ public interface ISessionRepository
 {
     Task<Session> CreateNewAsync(int latencyLevel, int joinedCount, int gameTimeInMinutes);
     
-    Task<Session> AddPlayerToSessionAsync(Player player);
+    Task<SessionPlayer> AddPlayerToSessionAsync(Guid sessionId, Player player);
     
-    Task<Session> RemovePlayerFromSessionAsync(Player player);
+    Task<SessionPlayer> RemovePlayerFromSessionAsync(Guid sessionId, Player player);
 }

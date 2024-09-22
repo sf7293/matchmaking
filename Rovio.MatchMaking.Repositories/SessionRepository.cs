@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Rovio.MatchMaking.Repositories.Data;
 namespace Rovio.MatchMaking.Repositories;
 
@@ -12,6 +13,7 @@ public class SessionRepository : ISessionRepository
     public async Task<Session> CreateNewAsync(int latencyLevel, int joinedCount, int gameTimeInMinutes)
     {
         // Validation checks for the parameters
+        //TODO: move these checks to the logic layer??
         if (latencyLevel < 1 || latencyLevel > 5)
         {
             throw new ArgumentOutOfRangeException(nameof(latencyLevel), "Latency level must be between 1 and 5.");
@@ -43,13 +45,77 @@ public class SessionRepository : ISessionRepository
         return session;
     }
 
-    public async Task<Session> AddPlayerToSessionAsync(Player player)
+    public async Task<SessionPlayer> AddPlayerToSessionAsync(Guid sessionId, Player player)
     {
-        throw new NotImplementedException();
+        // Check if the session exists
+        var session = await _context.Sessions.FindAsync(sessionId);
+        if (session == null)
+        {
+            throw new ArgumentException("Session not found.");
+        }
+
+        // Check if the session has space for more players
+        if (session.JoinedCount >= 10)
+        {
+            throw new InvalidOperationException("Session is full.");
+        }
+
+        // Check if the player is already in the session
+        var existingSessionPlayer = await _context.SessionPlayers
+            .FirstOrDefaultAsync(sp => sp.SessionId == sessionId && sp.PlayerId == player.Id);
+        if (existingSessionPlayer != null)
+        {
+            throw new InvalidOperationException("Player is already in the session.");
+        }
+
+        // Add the player to the session
+        var sessionPlayer = new SessionPlayer
+        {
+            Id = Guid.NewGuid(),
+            SessionId = sessionId,
+            PlayerId = player.Id,
+            Status = "ATTENDED",
+            Score = 0,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+
+        session.JoinedCount++; // Increase the player count in the session
+
+        await _context.SessionPlayers.AddAsync(sessionPlayer);
+        _context.Sessions.Update(session); // Update the session with the new JoinedCount
+        await _context.SaveChangesAsync();
+
+        return sessionPlayer;
     }
 
-    public async Task<Session> RemovePlayerFromSessionAsync(Player player)
+    public async Task<SessionPlayer> RemovePlayerFromSessionAsync(Guid sessionId, Player player)
     {
-        throw new NotImplementedException();
+        // Find the session player entry
+        var sessionPlayer = await _context.SessionPlayers
+            .FirstOrDefaultAsync(sp => sp.SessionId == sessionId && sp.PlayerId == player.Id);
+        if (sessionPlayer == null)
+        {
+            throw new ArgumentException("Player is not in the session.");
+        }
+
+        // Update the status to 'LEFT'
+        sessionPlayer.Status = "LEFT";
+        sessionPlayer.UpdatedAt = DateTime.UtcNow;
+
+        // Update the session player entry
+        _context.SessionPlayers.Update(sessionPlayer);
+
+        // Find the session and decrease the JoinedCount if necessary
+        var session = await _context.Sessions.FindAsync(sessionId);
+        if (session != null && session.JoinedCount > 0)
+        {
+            session.JoinedCount--;
+            _context.Sessions.Update(session);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return sessionPlayer;
     }
 }
