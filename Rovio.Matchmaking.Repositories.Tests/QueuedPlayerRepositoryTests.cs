@@ -1,24 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Rovio.MatchMaking.Repositories.Data;
-using Rovio.MatchMaking.Repositories;
 using Xunit;
 
 namespace Rovio.MatchMaking.Tests
 {
     public class QueuedPlayerRepositoryTests
     {
-        private readonly AppDbContext _context;
-        private readonly IQueuedPlayerRepository _repository;
+        private AppDbContext _context;
+        private IQueuedPlayerRepository _repository;
 
         public QueuedPlayerRepositoryTests()
         {
-            // Set up in-memory database
+            ProvideCleanDatabase();
+        }
+        
+        // This method is called to provide a fresh DB context ensuring every test case is stateless
+        protected void ProvideCleanDatabase()
+        {
+            // Setting up a clean in-memory database
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TestDatabase")
-                .Options;
+            .UseInMemoryDatabase(Guid.NewGuid().ToString()) // Unique name
+            .Options;
 
             _context = new AppDbContext(options);
             _repository = new QueuedPlayerRepository(_context);
@@ -27,6 +29,8 @@ namespace Rovio.MatchMaking.Tests
         [Fact]
         public async Task AddQueuedPlayerAsync_ShouldAddPlayer()
         {
+            ProvideCleanDatabase();
+
             // Arrange
             var playerId = Guid.NewGuid();
             var queuedPlayer = new QueuedPlayer { PlayerId = playerId, LatencyLevel = 1, CreatedAt = DateTime.UtcNow };
@@ -44,6 +48,8 @@ namespace Rovio.MatchMaking.Tests
         [Fact]
         public async Task DeleteQueuedPlayerAsync_ShouldRemovePlayer()
         {
+            ProvideCleanDatabase();
+
             // Arrange
             var playerId = Guid.NewGuid();
             var queuedPlayer = new QueuedPlayer { PlayerId = playerId, LatencyLevel = 1, CreatedAt = DateTime.UtcNow };
@@ -62,6 +68,8 @@ namespace Rovio.MatchMaking.Tests
         [Fact]
         public async Task UpdateQueuedPlayerAsync_ShouldUpdatePlayer()
         {
+            ProvideCleanDatabase();
+
             // Arrange
             var playerId = Guid.NewGuid();
             var queuedPlayer = new QueuedPlayer { PlayerId = playerId, LatencyLevel = 1, CreatedAt = DateTime.UtcNow };
@@ -82,6 +90,8 @@ namespace Rovio.MatchMaking.Tests
         [Fact]
         public async Task GetQueuedPlayerByIdAsync_ShouldGetPlayer()
         {
+            ProvideCleanDatabase();
+
             // Arrange
             var playerId = Guid.NewGuid();
             var queuedPlayer = new QueuedPlayer { PlayerId = playerId, LatencyLevel = 1, CreatedAt = DateTime.UtcNow };
@@ -99,6 +109,8 @@ namespace Rovio.MatchMaking.Tests
         [Fact]
         public async Task GetQueuedPlayerByPlayerIdAsync_ShouldGetPlayer()
         {
+            ProvideCleanDatabase();
+
             // Arrange
             var playerId = Guid.NewGuid();
             var queuedPlayer = new QueuedPlayer { PlayerId = playerId, LatencyLevel = 1, CreatedAt = DateTime.UtcNow };
