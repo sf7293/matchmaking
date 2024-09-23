@@ -1,10 +1,6 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Rovio.MatchMaking.Net;
-using Rovio.MatchMaking;
 using Xunit;
 
 namespace Rovio.MatchMaking.Net.Tests
@@ -68,6 +64,48 @@ namespace Rovio.MatchMaking.Net.Tests
             Assert.Contains("Player is already queued", badRequestResult.Value.ToString());
         }
 
-        //INJA: develop tests for dequeueing
+        [Fact]
+        public async Task DequeuePlayerAsync_ShouldReturnBadRequest_WhenPlayerIsNull()
+        {
+            // Act
+            var result = await _controller.DequeuePlayerAsync(null);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.NotNull(badRequestResult.Value);
+            Assert.Contains("Player cannot be null", badRequestResult.Value.ToString());
+        }
+
+        [Fact]
+        public async Task DequeuePlayerAsync_ShouldReturnBadRequest_WhenPlayerHadNotBeenQueued()
+        {
+            // Arrange
+            var player = new Player { Id = Guid.NewGuid(), Name = "TestPlayer", LatencyMilliseconds = 50 };
+
+            // Act
+            var result = await _controller.DequeuePlayerAsync(player);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.NotNull(badRequestResult.Value);
+            Assert.Contains("Player is not queued", badRequestResult.Value.ToString());
+        }
+
+        [Fact]
+        public async Task DequeuePlayerAsync_ShouldReturnOk_WhenPlayerHadBeenQueued()
+        {
+            // Arrange
+            var player = new Player { Id = Guid.NewGuid(), Name = "TestPlayer", LatencyMilliseconds = 50 };
+            var _queuedPlayer = QueuedPlayer.CreateQueuedPlayerFromPlayer(player);
+            _queuedPlayerRepositoryMock.Setup(qpr => qpr.GetQueuedPlayerByPlayerIdAsync(player.Id)).ReturnsAsync(new QueuedPlayer());
+
+            // Act
+            var result = await _controller.QueuePlayerAsync(player);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.NotNull(badRequestResult.Value);
+            Assert.Contains("Player is already queued", badRequestResult.Value.ToString());
+        }
     }
 }
