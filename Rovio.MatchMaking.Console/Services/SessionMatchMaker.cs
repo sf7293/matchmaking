@@ -23,31 +23,72 @@ namespace Rovio.MatchMaking.Console.Services
 
         public async Task RunAsync()
         {
-            // Step 1: Read Players from Queues and Create a HashMap
-            var queuedPlayersMap = await CreateQueuedPlayersMapAsync();
+            //TODO: try/catch
 
-            // Step 2: Read Active Sessions and Create a HashMap
-            var activeSessionsMap = await CreateActiveSessionsMapAsync();
+            try {
+                // Step 1: Read Players from Queues and Create a HashMap
+                var queuedPlayersMap = await CreateQueuedPlayersMapAsync();
 
-            // Step 3: Try to Add Players to Active Sessions
+                // Step 2: Read Active Sessions and Create a HashMap
+                var activeSessionsMap = await CreateActiveSessionsMapAsync();
+
+                joinedSessionsPlayerIds = AddQueuedPlayersToActiveSessions(queuedPlayersMap, activeSessionsMap);
+                //TODO: send notification and matched event for joinedSessionsPlayerIds users
+
+                queuedPlayersMap = RemoveAttendedPlayerIdsFromMap(queuedPlayersMap, joinedSessionsPlayerIds);
+
+                // Step 4: Create New Sessions if Necessary
+                joinedSessionsPlayerIds = CreateSessionForRemainedPlayers(queuedPlayersMap);
+            } catch (Exception ex) {
+                System.Console.WriteLine("Error while doing the matching operation!");
+            }
+
+            System.Console.WriteLine("Matchmaking process completed successfully!");
+        }
+
+        private async Task<List<int>> AddQueuedPlayersToActiveSessions(queuedPlayersMap Dictionary<int, List<QueuedPlayer>>, activeSessionsMap Dictionary<int, List<Session>>)
+        {
+            List<int> addedPlayerIds = new List<int>();
             foreach (var latencyLevel in queuedPlayersMap.Keys)
             {
                 if (activeSessionsMap.ContainsKey(latencyLevel))
                 {
                     foreach (var queuedPlayer in queuedPlayersMap[latencyLevel])
                     {
-                        var addedToSession = await TryAddPlayerToActiveSessionAsync(latencyLevel, queuedPlayer, activeSessionsMap);
-                        if (!addedToSession) /// ????
+                        var sessions = activeSessionsMap[latencyLevel];
+                        foreach (var session in sessions)
                         {
-                            break;
+                            if (session.JoinedCount < 10)
+                            {
+                                using var transaction = await _context.Database.BeginTransactionAsync();
+                                try {
+                                    await _sessionRepository.AddPlayerToSessionAsync(session.Id, queuedPlayer.PlayerId);
+                                    session.JoinedCount++;
+                                    _context.Sessions.Update(session);
+                                    await _queuedPlayerRepository.DeleteQueuedPlayerAsync(queuedPlayer.Id);
+                                    await _context.SaveChangesAsync();
+                                    await transaction.CommitAsync();
+
+                                    addedPlayerIds.Add(queuedPlayer.PlayerId);
+                                } catch (Exception ex)
+                                {
+                                    // Rollback the transaction if any operation fails
+                                    await transaction.RollbackAsync();
+                                    throw ex;
+                                }
+                            }
                         }
-                        // TODO: notifying the user about the matching process result success
-                        // It could be done through Socket or Push Notification
                     }
                 }
             }
 
-            // Step 4: Create New Sessions if Necessary
+            return addedPlayerIds;
+        }
+
+        private async Task<List<int>> CreateSessionForRemainedPlayers(queuedPlayersMap Dictionary<int, List<QueuedPlayer>>)
+        {
+            List<int> addedPlayerIds = new List<int>();
+            
             foreach (var latencyLevel in queuedPlayersMap.Keys)
             {
                 var remainingQueuedPlayers = queuedPlayersMap[latencyLevel];
@@ -65,26 +106,49 @@ namespace Rovio.MatchMaking.Console.Services
                             // I have considered that the whole matching module is called by another service, so the existence of player and validity of playerId had been checked in other modules before 
                             await _sessionRepository.AddPlayerToSessionAsync(newSession.Id, queuedPlayer.PlayerId);
                             await _queuedPlayerRepository.DeleteQueuedPlayerAsync(queuedPlayer.Id);
-                            //INJA
-                            // await _sessionRepository.Remove(newSession.Id, playerId);
-                            //TODO: removed QueuedPlayer
                         }
-
-                        //TODO: notify players for whom session is created
-                        remainingQueuedPlayers.RemoveRange(0, sessionSize);
 
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
+
+                        for (int i = 0; i < sessionSize; i++)
+                        {
+                            var queuedPlayer = remainingQueuedPlayers[i];
+                            addedPlayerIds.Add(queuedPlayer.PlayerId);
+                        }
+                        remainingQueuedPlayers.RemoveRange(0, sessionSize);
+
                     } catch (Exception ex) {
                         // Rollback the transaction if any operation fails
                         await transaction.RollbackAsync();
                         System.Console.WriteLine($"An error occurred during creating new session: PlayerIDs={string.Join(", ", remainingQueuedPlayers.GetRange(0, sessionSize))}, LatencyLevel={latencyLevel}, Error={ex.Message}");
-                        Environment.Exit(1);
+                        throw ex;
                     }
                 }
             }
 
-            System.Console.WriteLine("Matchmaking process completed successfully!");
+            return addedPlayerIds;
+        }
+
+        private async Task<Dictionary<int, List<QueuedPlayer>>> RemoveAttendedPlayerIdsFromMap(queuedPlayersMap Dictionary<int, List<QueuedPlayer>>, attendedPlayerIds List<int>)
+        {
+            var attendedPlayerIdsMap = new Dictionary<int, bool>();
+            foreach (var playerId in attendedPlayerIds) {
+                attendedPlayerIdsMap[playerId] = true;
+            }
+
+            var newQueuedPlayersMap = Dictionary<int, List<QueuedPlayer>>();
+            foreach (var latencyLevel in queuedPlayersMap.Keys) {
+                newQueuedPlayersList = List<QueuedPlayer>();
+                foreach (var queuedPlayer in queuedPlayersMap[latencyLevel]) {
+                    if (!attendedPlayerIdsMap[queuedPlayer.PlayerId]) {
+                        newQueuedPlayersList.Add(queuedPlayer);
+                    }
+                }
+                newQueuedPlayersMap[latencyLevel] = newQueuedPlayersList;
+            }
+
+            return newQueuedPlayersMap;
         }
 
         private async Task<Dictionary<int, List<QueuedPlayer>>> CreateQueuedPlayersMapAsync()
@@ -128,35 +192,6 @@ namespace Rovio.MatchMaking.Console.Services
             }
 
             return activeSessionsMap;
-        }
-
-        private async Task<bool> TryAddPlayerToActiveSessionAsync(int latencyLevel, QueuedPlayer queuedPlayer, Dictionary<int, List<Session>> activeSessionsMap)
-        {
-            //TODO: fix this! return or no return!!!!
-            // I have considered that the whole matching module is called by another service, so the existence of player and validity of playerId had been checked in other modules before 
-            var sessions = activeSessionsMap[latencyLevel];
-            foreach (var session in sessions)
-            {
-                if (session.JoinedCount < 10)
-                {
-                    using var transaction = await _context.Database.BeginTransactionAsync();
-                    try {
-                        await _sessionRepository.AddPlayerToSessionAsync(session.Id, queuedPlayer.PlayerId);
-                        session.JoinedCount++;
-                        _context.Sessions.Update(session);
-                        await _queuedPlayerRepository.DeleteQueuedPlayerAsync(queuedPlayer.Id);
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                    } catch (Exception ex)
-                    {
-                        // Rollback the transaction if any operation fails
-                        await transaction.RollbackAsync();
-                        System.Console.WriteLine($"An error occurred during adding player to session: PlayerId={queuedPlayer.PlayerId}, LatencyLevel={latencyLevel}, SessionId={session.Id}, Error={ex.Message}");
-                    }
-                }
-            }
-
-            return false; // No available session for the player
         }
     }
 }

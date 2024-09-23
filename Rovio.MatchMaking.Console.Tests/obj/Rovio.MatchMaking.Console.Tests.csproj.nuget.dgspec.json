@@ -1,0 +1,433 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console.Tests/Rovio.MatchMaking.Console.Tests.csproj": {}
+  },
+  "projects": {
+    "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console.Tests/Rovio.MatchMaking.Console.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console.Tests/Rovio.MatchMaking.Console.Tests.csproj",
+        "projectName": "Rovio.MatchMaking.Console.Tests",
+        "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console.Tests/Rovio.MatchMaking.Console.Tests.csproj",
+        "packagesPath": "/Users/mohammad/.nuget/packages/",
+        "outputPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console.Tests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/mohammad/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/Rovio.MatchMaking.Console.csproj": {
+                "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/Rovio.MatchMaking.Console.csproj"
+              },
+              "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj": {
+                "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.8.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.72, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.5.3, )"
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[2.5.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/Rovio.MatchMaking.Console.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/Rovio.MatchMaking.Console.csproj",
+        "projectName": "Rovio.MatchMaking.Console",
+        "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/Rovio.MatchMaking.Console.csproj",
+        "packagesPath": "/Users/mohammad/.nuget/packages/",
+        "outputPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/mohammad/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/Rovio.MatchMaking.Net.csproj": {
+                "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/Rovio.MatchMaking.Net.csproj"
+              },
+              "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj": {
+                "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj"
+              },
+              "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj": {
+                "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/Rovio.MatchMaking.Net.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/Rovio.MatchMaking.Net.csproj",
+        "projectName": "Rovio.MatchMaking.Net",
+        "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/Rovio.MatchMaking.Net.csproj",
+        "packagesPath": "/Users/mohammad/.nuget/packages/",
+        "outputPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Net/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/mohammad/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj": {
+                "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj"
+              },
+              "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj": {
+                "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Autofac": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            },
+            "Autofac.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj",
+        "projectName": "Rovio.MatchMaking.Repositories",
+        "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/Rovio.MatchMaking.Repositories.csproj",
+        "packagesPath": "/Users/mohammad/.nuget/packages/",
+        "outputPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Repositories/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/mohammad/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj": {
+                "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.FileExtensions": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj",
+        "projectName": "Rovio.MatchMaking",
+        "projectPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/Rovio.MatchMaking.csproj",
+        "packagesPath": "/Users/mohammad/.nuget/packages/",
+        "outputPath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/mohammad/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
