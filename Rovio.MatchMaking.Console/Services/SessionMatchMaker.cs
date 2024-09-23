@@ -23,8 +23,6 @@ namespace Rovio.MatchMaking.Console.Services
 
         public async Task RunAsync()
         {
-            //TODO: try/catch
-
             try {
                 // Step 1: Read Players from Queues and Create a HashMap
                 var queuedPlayersMap = await CreateQueuedPlayersMapAsync();
