@@ -1,0 +1,7 @@
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Tests/bin/Debug/net8.0/CoverletSourceRootsMapping_Rovio.MatchMaking.Tests
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Tests/obj/Debug/net8.0/Rovio.MatchMaking.Tests.csproj.AssemblyReference.cache
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Tests/obj/Debug/net8.0/Rovio.MatchMaking.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Tests/obj/Debug/net8.0/Rovio.MatchMaking.Tests.AssemblyInfoInputs.cache
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Tests/obj/Debug/net8.0/Rovio.MatchMaking.Tests.AssemblyInfo.cs
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Tests/obj/Debug/net8.0/Rovio.MatchMaking.Tests.csproj.CoreCompileInputs.cache
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Tests/obj/Debug/net8.0/Rovio.MatchMaking.Tests.sourcelink.json
