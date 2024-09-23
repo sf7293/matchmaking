@@ -24,8 +24,8 @@ namespace Rovio.MatchMaking.Console
             // Create a Host to manage dependency injection and configuration
             var host = CreateHostBuilder(args, configuration).Build(); // Pass configuration as parameter
 
-            // Use the host's service provider to get the SessionMatchmaker service and run it
-            var matchmaker = host.Services.GetRequiredService<SessionMatchmaker>();
+            // Use the host's service provider to get the SessionMatchMaker service and run it
+            var matchmaker = host.Services.GetRequiredService<SessionMatchMaker>();
 
             try
             {
@@ -55,7 +55,7 @@ namespace Rovio.MatchMaking.Console
                     // Register repositories and services
                     services.AddScoped<ISessionRepository, SessionRepository>();
                     services.AddScoped<IQueuedPlayerRepository, QueuedPlayerRepository>();
-                    services.AddScoped<SessionMatchmaker>();
+                    services.AddScoped<SessionMatchMaker>();
 
                     // Add additional services or configurations if needed
                 });

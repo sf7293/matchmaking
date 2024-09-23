@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Rovio.MatchMaking.Console.Services;
 using Rovio.MatchMaking.Repositories;
@@ -9,44 +10,53 @@ using Xunit;
 
 namespace Rovio.MatchMaking.Console.Tests
 {
-    public class SessionMatchmakerTests
+    public class SessionMatchMakerTests
     {
         private readonly Mock<IQueuedPlayerRepository> _queuedPlayerRepositoryMock;
         private readonly Mock<ISessionRepository> _sessionRepositoryMock;
-        private readonly SessionMatchmaker _sessionMatchmaker;
+        private readonly AppDbContext _context;
+        private readonly SessionMatchMaker _sessionMatchMaker;
 
-        public SessionMatchmakerTests()
+        public SessionMatchMakerTests()
         {
+            // Create an in-memory database for testing
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+
+            _context = new AppDbContext(options);
             _queuedPlayerRepositoryMock = new Mock<IQueuedPlayerRepository>();
             _sessionRepositoryMock = new Mock<ISessionRepository>();
-            
-            // Assuming SessionMatchmaker takes repositories as constructor arguments
-            _sessionMatchmaker = new SessionMatchmaker(
-                new Mock<AppDbContext>().Object, // Use mock context if needed
+
+            // Initialize the SessionMatchmaker with mocked dependencies
+            _sessionMatchMaker = new SessionMatchMaker(
+                _context,
+                _queuedPlayerRepositoryMock.Object,
                 _sessionRepositoryMock.Object
             );
         }
 
         [Fact]
-        public async Task RunAsync_ShouldHandleMatchmakingLogic()
+        public async Task CreatePlayersMapAsync_ShouldReturnCorrectMap()
         {
             // Arrange
-            // Mock necessary methods and data for repositories
-            _queuedPlayerRepositoryMock.Setup(repo => repo.GetQueuedPlayersAsync())
-                .ReturnsAsync(new List<QueuedPlayer>
-                {
-                    new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 1 }
-                });
-
-            _sessionRepositoryMock.Setup(repo => repo.CreateNewAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(new Session { Id = Guid.NewGuid(), LatencyLevel = 1 });
+            var players = new List<QueuedPlayer>
+            {
+                new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 1, CreatedAt = DateTime.UtcNow },
+                new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 2, CreatedAt = DateTime.UtcNow }
+            };
+            await _context.QueuedPlayers.AddRangeAsync(players);
+            await _context.SaveChangesAsync();
 
             // Act
-            await _sessionMatchmaker.RunAsync();
+            var result = await _sessionMatchMaker.CreateQueuedPlayersMapAsync();
 
             // Assert
-            _sessionRepositoryMock.Verify(repo => repo.CreateNewAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _queuedPlayerRepositoryMock.Verify(repo => repo.DeleteQueuedPlayerAsync(It.IsAny<Guid>()), Times.Once);
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+            Assert.Contains(1, result.Keys);
+            Assert.Contains(2, result.Keys);
         }
+
     }
 }
