@@ -67,5 +67,5 @@ There are 3 APIs:
 - Dequeue: Enables players to cancel their matchmaking request.
 - Join Session: Once a player has been matched and received their sessionId via push notification or WebSocket, they can use this API to join their contest session.
 
-# Diagrams
+# System Design Diagram of Matchmaking service
 ![System Design Diagram](./assets/rovio-task.drawio.png)
