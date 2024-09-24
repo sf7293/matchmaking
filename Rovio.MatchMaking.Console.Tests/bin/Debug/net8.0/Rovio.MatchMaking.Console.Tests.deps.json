@@ -1792,6 +1792,7 @@
       },
       "Rovio.MatchMaking.Console/1.0.0": {
         "dependencies": {
+          "Microsoft.EntityFrameworkCore.InMemory": "8.0.8",
           "Microsoft.Extensions.Configuration": "8.0.0",
           "Microsoft.Extensions.Configuration.Json": "8.0.0",
           "Microsoft.Extensions.Hosting": "8.0.0",

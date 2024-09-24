@@ -75,3 +75,4 @@
 /Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/obj/Debug/net8.0/Rovio.MatchMaking.Console.pdb
 /Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/obj/Debug/net8.0/Rovio.MatchMaking.Console.genruntimeconfig.cache
 /Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/obj/Debug/net8.0/ref/Rovio.MatchMaking.Console.dll
+/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll

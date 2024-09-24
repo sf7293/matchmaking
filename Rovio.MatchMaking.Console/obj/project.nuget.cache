@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "pl3qbCF5ipQ=",
+  "dgSpecHash": "9W4KQHxT808=",
   "success": true,
   "projectFilePath": "/Users/mohammad/Workspace/dotnet/matchmaking/Rovio.MatchMaking.Console/Rovio.MatchMaking.Console.csproj",
   "expectedPackageFiles": [
@@ -16,6 +16,7 @@
     "/Users/mohammad/.nuget/packages/microsoft.entityframeworkcore/8.0.8/microsoft.entityframeworkcore.8.0.8.nupkg.sha512",
     "/Users/mohammad/.nuget/packages/microsoft.entityframeworkcore.abstractions/8.0.8/microsoft.entityframeworkcore.abstractions.8.0.8.nupkg.sha512",
     "/Users/mohammad/.nuget/packages/microsoft.entityframeworkcore.analyzers/8.0.8/microsoft.entityframeworkcore.analyzers.8.0.8.nupkg.sha512",
+    "/Users/mohammad/.nuget/packages/microsoft.entityframeworkcore.inmemory/8.0.8/microsoft.entityframeworkcore.inmemory.8.0.8.nupkg.sha512",
     "/Users/mohammad/.nuget/packages/microsoft.entityframeworkcore.relational/8.0.8/microsoft.entityframeworkcore.relational.8.0.8.nupkg.sha512",
     "/Users/mohammad/.nuget/packages/microsoft.entityframeworkcore.sqlserver/8.0.8/microsoft.entityframeworkcore.sqlserver.8.0.8.nupkg.sha512",
     "/Users/mohammad/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",

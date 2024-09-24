@@ -257,5 +257,85 @@ namespace Rovio.MatchMaking.Console.Tests
             Assert.Equal(player2.PlayerId, result[1][0].PlayerId);
             Assert.Equal(player3.PlayerId, result[2][0].PlayerId);
         }
+
+        [Fact]
+        public async Task AddQueuedPlayersToActiveSessions_ShouldAddPlayersSuccessfully()
+        {
+            // Arrange
+            var playerId = Guid.NewGuid();
+            var queuedPlayerId = Guid.NewGuid();
+            var sessionId = Guid.NewGuid();
+            var queuedPlayersMap = new Dictionary<int, List<QueuedPlayer>>
+            {
+                { 1, new List<QueuedPlayer> { new QueuedPlayer { PlayerId = playerId, Id = queuedPlayerId } } }
+            };
+            
+            var activeSessionsMap = new Dictionary<int, List<Session>>
+            {
+                { 1, new List<Session> { new Session { Id = sessionId, JoinedCount = 0 } } }
+            };
+
+            _sessionRepositoryMock.Setup(repo => repo.AddPlayerToSessionAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                                  .ReturnsAsync(new SessionPlayer{});
+            _queuedPlayerRepositoryMock.Setup(repo => repo.DeleteQueuedPlayerAsync(It.IsAny<Guid>()))
+                                       .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _sessionMatchMaker.AddQueuedPlayersToActiveSessions(queuedPlayersMap, activeSessionsMap);
+
+            // Assert
+            Assert.Single(result); // Only one player should be added
+            Assert.Equal(playerId, result[0]);
+            Assert.Equal(1, activeSessionsMap[1][0].JoinedCount); // Ensure the joined count increased
+        }
+
+        [Fact]
+        public async Task AddQueuedPlayersToActiveSessions_ShouldAddPlayersSuccessfully2()
+        {
+            // Arrange
+            var playerId = Guid.NewGuid();
+            var queuedPlayerId = Guid.NewGuid();
+            var sessionId = Guid.NewGuid();
+            var queuedPlayersMap = new Dictionary<int, List<QueuedPlayer>>
+            {
+                { 1, new List<QueuedPlayer> { 
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() },
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() },
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() }, 
+                    } 
+                },
+                { 2, new List<QueuedPlayer> { 
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() },
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() },
+                    } 
+                },
+                { 3, new List<QueuedPlayer> { 
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() }
+                    } 
+                }
+            };
+            
+            var activeSessionsMap = new Dictionary<int, List<Session>>
+            {
+                { 1, new List<Session> { new Session { Id = sessionId, JoinedCount = 9 } } },
+                { 2, new List<Session> { new Session { Id = sessionId, JoinedCount = 5 } } },
+                { 3, new List<Session> { new Session { Id = sessionId, JoinedCount = 8 } } }
+            };
+
+            _sessionRepositoryMock.Setup(repo => repo.AddPlayerToSessionAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                                  .ReturnsAsync(new SessionPlayer{});
+            _queuedPlayerRepositoryMock.Setup(repo => repo.DeleteQueuedPlayerAsync(It.IsAny<Guid>()))
+                                       .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _sessionMatchMaker.AddQueuedPlayersToActiveSessions(queuedPlayersMap, activeSessionsMap);
+
+            // Assert
+            Assert.Equal(4, result.Count);
+            Assert.Equal(queuedPlayersMap[1][0].PlayerId, result[0]); // The first player of latency level of 1
+            Assert.Equal(queuedPlayersMap[2][0].PlayerId, result[1]); // The first player of latency level of 2
+            Assert.Equal(queuedPlayersMap[2][1].PlayerId, result[2]); // The second player of latency level of 2
+            Assert.Equal(queuedPlayersMap[3][0].PlayerId, result[3]); // The first player of latency level of 3
+        }
     }
 }

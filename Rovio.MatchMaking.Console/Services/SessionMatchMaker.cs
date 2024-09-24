@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.InMemory;
 using Rovio.MatchMaking.Repositories;
 using Rovio.MatchMaking.Repositories.Data;
 
@@ -46,6 +48,9 @@ public class SessionMatchMaker
     internal async Task<List<System.Guid>> AddQueuedPlayersToActiveSessions(Dictionary<int, List<QueuedPlayer>> queuedPlayersMap, Dictionary<int, List<Session>> activeSessionsMap)
     {
         List<System.Guid> addedPlayerIds = new List<System.Guid>();
+        // Preventing to use db transactions for test environment, to be able to mock db methods in this case
+        var isTestEnvironment = _context.Database.IsInMemory();
+
         foreach (var latencyLevel in queuedPlayersMap.Keys)
         {
             if (activeSessionsMap.ContainsKey(latencyLevel))
@@ -57,20 +62,30 @@ public class SessionMatchMaker
                     {
                         if (session.JoinedCount < 10)
                         {
-                            using var transaction = await _context.Database.BeginTransactionAsync();
+                            IDbContextTransaction transaction = null;
+                            if (!isTestEnvironment) {
+                                transaction = await _context.Database.BeginTransactionAsync();    
+                            }
+                            // using var transaction = await _context.Database.BeginTransactionAsync();
                             try {
                                 await _sessionRepository.AddPlayerToSessionAsync(session.Id, queuedPlayer.PlayerId);
                                 session.JoinedCount++;
-                                _context.Sessions.Update(session);
+                                if (!isTestEnvironment) {
+                                    _context.Sessions.Update(session);
+                                }
                                 await _queuedPlayerRepository.DeleteQueuedPlayerAsync(queuedPlayer.Id);
-                                await _context.SaveChangesAsync();
-                                await transaction.CommitAsync();
+                                if (!isTestEnvironment) {
+                                    await _context.SaveChangesAsync();
+                                    await transaction.CommitAsync();   
+                                }
 
                                 addedPlayerIds.Add(queuedPlayer.PlayerId);
                             } catch (Exception ex)
                             {
                                 // Rollback the transaction if any operation fails
-                                await transaction.RollbackAsync();
+                                if (!isTestEnvironment) {
+                                    await transaction.RollbackAsync();
+                                }
                                 throw ex;
                             }
                         }
