@@ -12,8 +12,8 @@ using Rovio.MatchMaking.Repositories.Data;
 namespace Rovio.MatchMaking.Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240921193427_AddSessionPlayerTable")]
-    partial class AddSessionPlayerTable
+    [Migration("20240924173219_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
