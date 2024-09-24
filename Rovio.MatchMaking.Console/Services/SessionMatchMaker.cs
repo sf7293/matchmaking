@@ -138,11 +138,13 @@ public class SessionMatchMaker
         foreach (var latencyLevel in queuedPlayersMap.Keys) {
             var newQueuedPlayersList = new List<QueuedPlayer>();
             foreach (var queuedPlayer in queuedPlayersMap[latencyLevel]) {
-                if (!attendedPlayerIdsMap[queuedPlayer.PlayerId]) {
+                if (!attendedPlayerIdsMap.ContainsKey(queuedPlayer.PlayerId)) {
                     newQueuedPlayersList.Add(queuedPlayer);
                 }
             }
-            newQueuedPlayersMap[latencyLevel] = newQueuedPlayersList;
+            if (newQueuedPlayersList.Count > 0) {
+                newQueuedPlayersMap[latencyLevel] = newQueuedPlayersList;
+            }
         }
 
         return newQueuedPlayersMap;

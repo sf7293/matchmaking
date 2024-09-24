@@ -24,7 +24,7 @@ namespace Rovio.MatchMaking.Console.Tests
                 .UseInMemoryDatabase(databaseName: "TestDatabase")
                 .Options;
 
-//TODO: remove direct database related context and stuff
+            //TODO: remove direct database related context and stuff
             _context = new AppDbContext(options);
             _queuedPlayerRepositoryMock = new Mock<IQueuedPlayerRepository>();
             _sessionRepositoryMock = new Mock<ISessionRepository>();
@@ -164,6 +164,98 @@ namespace Rovio.MatchMaking.Console.Tests
             Assert.Contains(4, result.Keys);
             Assert.Equal(1, result[4].Count);
             Assert.Equal(sessions[6].Id, result[4][0].Id);
+        }
+
+        [Fact]
+        public async Task RemoveAttendedPlayerIdsFromMap_ShouldRemoveAllAttendedPlayers()
+        {
+            // Arrange
+            var player1 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 1 };
+            var player2 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 1 };
+            var player3 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 2 };
+            var queuedPlayersMap = new Dictionary<int, List<QueuedPlayer>>
+            {
+                { 1, new List<QueuedPlayer> { player1, player2 } },
+                { 2, new List<QueuedPlayer> { player3 } }
+            };
+            var attendedPlayerIds = new List<Guid> { player1.PlayerId, player3.PlayerId };
+
+            // Act
+            var result = await _sessionMatchMaker.RemoveAttendedPlayerIdsFromMap(queuedPlayersMap, attendedPlayerIds);
+
+            // Assert
+            Assert.Equal(1, result.Count);
+            Assert.Contains(1, result.Keys);
+            Assert.Equal(player2.PlayerId, result[1][0].PlayerId);
+        }
+
+        [Fact]
+        public async Task RemoveAttendedPlayerIdsFromMap_ShouldNotRemoveNonAttendedPlayers()
+        {
+            // Arrange
+            var player1 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 1 };
+            var player2 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 1 };
+            var player3 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 2 };
+            var queuedPlayersMap = new Dictionary<int, List<QueuedPlayer>>
+            {
+                { 1, new List<QueuedPlayer> { player1, player2 } },
+                { 2, new List<QueuedPlayer> { player3 } }
+            };
+            var attendedPlayerIds = new List<Guid>(); // No attended players
+
+            // Act
+            var result = await _sessionMatchMaker.RemoveAttendedPlayerIdsFromMap(queuedPlayersMap, attendedPlayerIds);
+
+            // Assert
+            Assert.Equal(2, result.Count);
+            Assert.Contains(1, result.Keys);
+            Assert.Contains(2, result.Keys);
+            Assert.Equal(player1.PlayerId, result[1][0].PlayerId);
+            Assert.Equal(player2.PlayerId, result[1][1].PlayerId);
+            Assert.Equal(player3.PlayerId, result[2][0].PlayerId);
+        }
+
+        [Fact]
+        public async Task RemoveAttendedPlayerIdsFromMap_ShouldHandleEmptyMap()
+        {
+            // Arrange
+            var queuedPlayersMap = new Dictionary<int, List<QueuedPlayer>>();
+            var attendedPlayerIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() }; // Some attended player IDs
+
+            // Act
+            var result = await _sessionMatchMaker.RemoveAttendedPlayerIdsFromMap(queuedPlayersMap, attendedPlayerIds);
+
+            // Assert
+            Assert.Empty(result); // The result should also be an empty map
+        }
+
+        [Fact]
+        public async Task RemoveAttendedPlayerIdsFromMap_ShouldRemoveAttendedPlayersAcrossDifferentLatencyLevels()
+        {
+            // Arrange
+            var player1 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 1 };
+            var player2 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 1 };
+            var player3 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 2 };
+            var player4 = new QueuedPlayer { PlayerId = Guid.NewGuid(), LatencyLevel = 3 };
+            var queuedPlayersMap = new Dictionary<int, List<QueuedPlayer>>
+            {
+                { 1, new List<QueuedPlayer> { player1, player2 } },
+                { 2, new List<QueuedPlayer> { player3 } },
+                { 3, new List<QueuedPlayer> { player4 } }
+            };
+            var attendedPlayerIds = new List<Guid> { player1.PlayerId, player4.PlayerId };
+
+            // Act
+            var result = await _sessionMatchMaker.RemoveAttendedPlayerIdsFromMap(queuedPlayersMap, attendedPlayerIds);
+
+            // Assert
+            Assert.Equal(2, result.Count);
+            Assert.Contains(1, result.Keys);
+            Assert.Contains(2, result.Keys);
+            Assert.Equal(1, result[1].Count);
+            Assert.Equal(1, result[1].Count);
+            Assert.Equal(player2.PlayerId, result[1][0].PlayerId);
+            Assert.Equal(player3.PlayerId, result[2][0].PlayerId);
         }
     }
 }
