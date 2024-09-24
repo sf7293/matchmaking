@@ -10,6 +10,18 @@ public class SessionRepository : ISessionRepository
         _context = context;
     }
 
+    //TODO: develop tests for this
+    //TODO: update Session Repository interface
+    public async Task<IEnumerable<Session>> GetAllActiveSessionsAsync()
+    {
+        var activeSessions = _context.Sessions
+        .Where(s => s.JoinedCount < 10) // Sessions with less than 10 players
+        .Where(s => s.EndsAt > DateTime.UtcNow) // Sessions with EndsAt > now are active
+        .OrderBy(s => s.CreatedAt); // Order by creation time;
+
+        return await activeSessions.ToListAsync();
+    }
+
     public async Task<Session> CreateNewAsync(int latencyLevel, int joinedCount, int gameTimeInMinutes)
     {
         // Validation checks for the parameters

@@ -173,10 +173,7 @@ public class SessionMatchMaker
     internal async Task<Dictionary<int, List<Session>>> CreateActiveSessionsMapAsync()
     {
         //TODO: move this part to repoe
-        var activeSessions = await _context.Sessions
-            .Where(s => s.JoinedCount < 10) // Sessions with less than 10 players
-            .OrderBy(s => s.CreatedAt) // Order by creation time
-            .ToListAsync();
+        var activeSessions = await _sessionRepository.GetAllActiveSessionsAsync();
 
         var activeSessionsMap = new Dictionary<int, List<Session>>();
 
