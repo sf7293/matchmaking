@@ -10,8 +10,6 @@ public class SessionRepository : ISessionRepository
         _context = context;
     }
 
-    //TODO: develop tests for this
-    //TODO: update Session Repository interface
     public async Task<IEnumerable<Session>> GetAllActiveSessionsAsync()
     {
         var activeSessions = _context.Sessions

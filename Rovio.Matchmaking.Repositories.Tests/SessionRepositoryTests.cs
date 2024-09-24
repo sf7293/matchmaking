@@ -50,6 +50,46 @@ namespace Rovio.MatchMaking.Tests
         }
 
         [Fact]
+        public async Task GetSessionById_ShouldWorkOK()
+        {
+            ProvideCleanDatabase();
+
+            // Arrange
+            var session = new Session { LatencyLevel = 1, JoinedCount = 1, CreatedAt = DateTime.UtcNow, EndsAt = DateTime.UtcNow.AddMinutes(30) };
+            
+            // Act
+            var insertedSession = _context.Sessions.Add(session);
+            await _context.SaveChangesAsync();
+            var fetchedSession = await _repository.GetSessionById(insertedSession.Entity.Id);
+
+            // Assert
+            Assert.NotNull(fetchedSession);
+        }
+
+        [Fact]
+        public async Task GetSessionPlayersBySessionId_ShouldWorkOK()
+        {
+            ProvideCleanDatabase();
+
+            // Arrange
+            var session = new Session { LatencyLevel = 1, JoinedCount = 1, CreatedAt = DateTime.UtcNow, EndsAt = DateTime.UtcNow.AddMinutes(30) };
+            
+            // Act
+            var insertedSession = _context.Sessions.Add(session);
+            var sessionPlayer1 = new SessionPlayer{ SessionId = insertedSession.Entity.Id, PlayerId = new Guid() };
+            var sessionPlayer2 = new SessionPlayer{ SessionId = insertedSession.Entity.Id, PlayerId = new Guid() };
+            _context.SessionPlayers.Add(sessionPlayer1);
+            _context.SessionPlayers.Add(sessionPlayer2);
+            await _context.SaveChangesAsync();
+            
+            var fetchedSessionPlayers = await _repository.GetSessionPlayersBySessionId(session.Id);
+
+            // Assert
+            Assert.NotNull(fetchedSessionPlayers);
+            Assert.Equal(2, fetchedSessionPlayers.Count());
+        }
+
+        [Fact]
         public async Task CreateNewAsync_ShouldCreateSession()
         {
             ProvideCleanDatabase();
