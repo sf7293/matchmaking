@@ -28,6 +28,28 @@ namespace Rovio.MatchMaking.Tests
         }
 
         [Fact]
+        public async Task GetAllActiveSessionsAsync_ShouldListActiveSessions()
+        {
+            ProvideCleanDatabase();
+
+            // Arrange
+            var sessionAtive1 = new Session { LatencyLevel = 1, JoinedCount = 1, CreatedAt = DateTime.UtcNow, EndsAt = DateTime.UtcNow.AddMinutes(30) };
+            var sessionAtive2 = new Session { LatencyLevel = 1, JoinedCount = 1, CreatedAt = DateTime.UtcNow, EndsAt = DateTime.UtcNow.AddMinutes(30) };
+            var sessionInactive = new Session { LatencyLevel = 1, JoinedCount = 1, CreatedAt = DateTime.UtcNow.AddMinutes(-50), EndsAt = DateTime.UtcNow.AddMinutes(-20) };
+
+            // Act
+            _context.Sessions.Add(sessionAtive1);
+            _context.Sessions.Add(sessionAtive2);
+            _context.Sessions.Add(sessionInactive);
+            await _context.SaveChangesAsync();
+            var fetchedSessions = await _repository.GetAllActiveSessionsAsync();
+
+            // Assert
+            Assert.NotNull(fetchedSessions);
+            Assert.Equal(2, fetchedSessions.Count());
+        }
+
+        [Fact]
         public async Task CreateNewAsync_ShouldCreateSession()
         {
             ProvideCleanDatabase();
