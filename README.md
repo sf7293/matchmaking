@@ -68,4 +68,4 @@ There are 3 APIs:
 - Join Session: Once a player has been matched and received their sessionId via push notification or WebSocket, they can use this API to join their contest session.
 
 # System Design Diagram of Matchmaking service
-![System Design Diagram](./assets/rovio-task.drawio.png)
+![System Design Diagram](./assets/rovio-task_v2.drawio.png)
