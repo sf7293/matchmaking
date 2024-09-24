@@ -1,7 +1,7 @@
 # Assumptions
 
 I have made the following assumptions:
-- I have considered that this service will be called internally by other services, So it would be safe to call for example QueuePlayer method with the PlayerId give in the REST API. While if it's called by users directly we should have some Authentication methods and don't accept playerId from body of the request.
+- I have designed this service to be invoked internally by other services, making it safe to call methods like QueuePlayer using the PlayerId provided in the REST API. However, if the service is exposed to external users, we should implement authentication mechanisms and avoid accepting PlayerId directly from the request body to ensure security.
 - I defined something named QueuedPlayer as another entity in table, because I have considered that Player is something from another microservice and since I wanted to add some new fields to it, I considered a QueuedPlayer entity which can be casted to player and vice versa.
 - **Session Definition:** A session is a competitive environment where 2 to 10 players can participate. A player can only be part of one session at a time until it concludes.
 - **Session Joining:** Players must either leave their current contest or wait for it to finish before joining a new session.
@@ -20,7 +20,7 @@ If a session were created for every request and returned in the response, the sy
 To address these issues, I've considered:
 
 - **Session Creation:** Sessions are not created via the API but only through a scheduled console command (cron job).
-- **Cron Job Execution:** A matching cron job can be executed every minute. Since only one instance of this job runs at a time, mutual exclusion and concurrency handling are not needed, provided this condition is maintained.
+- **Cron Job Execution:** A matching cron job can be scheduled to run every minute. Since only one instance of this job executes at a time, mutual exclusion and concurrency management are unnecessary as long as this condition is upheld. Alternatively, we can implement a worker that continuously performs the matching operation in a `while(true)` loop, if the one-minute interval is not optimal for user experience.
 - **Efficient Matching:** This approach ensures efficient matching and prevents the creation of unnecessary sessions through a well-implemented matching command.
 
 //TODO: desc more about why if we respond back the session_id what would be challenges.
@@ -62,5 +62,10 @@ This table contains players' requests to join a session.
 
 
 # Code Design and Architecture
+There are 3 APIs:
+- Queue: Allows players to request entry into the queue, provided they haven't already done so.
+- Dequeue: Enables players to cancel their matchmaking request.
+- Join Session: Once a player has been matched and received their sessionId via push notification or WebSocket, they can use this API to join their contest session.
 
 # Diagrams
+![System Design Diagram](./assets/rovio-task.drawio.png)
