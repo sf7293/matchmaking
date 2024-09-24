@@ -151,9 +151,10 @@ public class SessionMatchMaker
     internal async Task<Dictionary<int, List<QueuedPlayer>>> CreateQueuedPlayersMapAsync()
     {
         //TODO: move this part to repoe
-        var playersQueue = await _context.QueuedPlayers
-            .OrderBy(qp => qp.CreatedAt) // Order by queueing time
-            .ToListAsync();
+        // var playersQueue = await _context.QueuedPlayers
+        //     .OrderBy(qp => qp.CreatedAt) // Order by queueing time
+        //     .ToListAsync();
+        var playersQueue = await _queuedPlayerRepository.GetAllQueuedPlayersAsync();
 
         var queudPlayersMap = new Dictionary<int, List<QueuedPlayer>>();
 
