@@ -47,9 +47,10 @@ public class SessionMatchMaker
 
     internal async Task<List<System.Guid>> AddQueuedPlayersToActiveSessions(Dictionary<int, List<QueuedPlayer>> queuedPlayersMap, Dictionary<int, List<Session>> activeSessionsMap)
     {
-        List<System.Guid> addedPlayerIds = new List<System.Guid>();
         // Preventing to use db transactions for test environment, to be able to mock db methods in this case
         var isTestEnvironment = _context.Database.IsInMemory();
+
+        List<System.Guid> addedPlayerIds = new List<System.Guid>();
 
         foreach (var latencyLevel in queuedPlayersMap.Keys)
         {
@@ -99,6 +100,9 @@ public class SessionMatchMaker
 
     internal async Task<List<System.Guid>> CreateSessionForRemainedPlayers(Dictionary<int, List<QueuedPlayer>> queuedPlayersMap)
     {
+        // Preventing to use db transactions for test environment, to be able to mock db methods in this case
+        var isTestEnvironment = _context.Database.IsInMemory();
+
         List<System.Guid> addedPlayerIds = new List<System.Guid>();
         
         foreach (var latencyLevel in queuedPlayersMap.Keys)
@@ -108,7 +112,10 @@ public class SessionMatchMaker
             {
                 var sessionSize = remainingQueuedPlayers.Count >= 10 ? 10 : remainingQueuedPlayers.Count;
                 
-                using var transaction = await _context.Database.BeginTransactionAsync();
+                IDbContextTransaction transaction = null;
+                if (!isTestEnvironment) {
+                    transaction = await _context.Database.BeginTransactionAsync();
+                }
                 try {
                     var newSession = await _sessionRepository.CreateNewAsync(latencyLevel, 0, 30);
 
@@ -120,8 +127,10 @@ public class SessionMatchMaker
                         await _queuedPlayerRepository.DeleteQueuedPlayerAsync(queuedPlayer.Id);
                     }
 
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
+                    if (!isTestEnvironment) {
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
 
                     for (int i = 0; i < sessionSize; i++)
                     {
@@ -132,7 +141,10 @@ public class SessionMatchMaker
 
                 } catch (Exception ex) {
                     // Rollback the transaction if any operation fails
-                    await transaction.RollbackAsync();
+                    if (!isTestEnvironment) {
+                        await transaction.RollbackAsync();
+                    }
+    
                     System.Console.WriteLine($"An error occurred during creating new session: PlayerIDs={string.Join(", ", remainingQueuedPlayers.GetRange(0, sessionSize))}, LatencyLevel={latencyLevel}, Error={ex.Message}");
                     throw ex;
                 }

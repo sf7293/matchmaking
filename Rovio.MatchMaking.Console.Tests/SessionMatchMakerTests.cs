@@ -293,9 +293,6 @@ namespace Rovio.MatchMaking.Console.Tests
         public async Task AddQueuedPlayersToActiveSessions_ShouldAddPlayersSuccessfully2()
         {
             // Arrange
-            var playerId = Guid.NewGuid();
-            var queuedPlayerId = Guid.NewGuid();
-            var sessionId = Guid.NewGuid();
             var queuedPlayersMap = new Dictionary<int, List<QueuedPlayer>>
             {
                 { 1, new List<QueuedPlayer> { 
@@ -317,9 +314,9 @@ namespace Rovio.MatchMaking.Console.Tests
             
             var activeSessionsMap = new Dictionary<int, List<Session>>
             {
-                { 1, new List<Session> { new Session { Id = sessionId, JoinedCount = 9 } } },
-                { 2, new List<Session> { new Session { Id = sessionId, JoinedCount = 5 } } },
-                { 3, new List<Session> { new Session { Id = sessionId, JoinedCount = 8 } } }
+                { 1, new List<Session> { new Session { Id = Guid.NewGuid(), JoinedCount = 9 } } },
+                { 2, new List<Session> { new Session { Id = Guid.NewGuid(), JoinedCount = 5 } } },
+                { 3, new List<Session> { new Session { Id = Guid.NewGuid(), JoinedCount = 8 } } }
             };
 
             _sessionRepositoryMock.Setup(repo => repo.AddPlayerToSessionAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
@@ -336,6 +333,62 @@ namespace Rovio.MatchMaking.Console.Tests
             Assert.Equal(queuedPlayersMap[2][0].PlayerId, result[1]); // The first player of latency level of 2
             Assert.Equal(queuedPlayersMap[2][1].PlayerId, result[2]); // The second player of latency level of 2
             Assert.Equal(queuedPlayersMap[3][0].PlayerId, result[3]); // The first player of latency level of 3
+        }
+
+        [Fact]
+        public async Task CreateSessionForRemainedPlayers_ShouldAddPlayersSuccessfully()
+        {
+            // Arrange
+            var queuedPlayersMap = new Dictionary<int, List<QueuedPlayer>>
+            {
+                { 1, new List<QueuedPlayer> { 
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() },
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() },
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() }, 
+                    } 
+                },
+                { 2, new List<QueuedPlayer> { 
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() },
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() },
+                    } 
+                },
+                { 3, new List<QueuedPlayer> { 
+                        new QueuedPlayer { Id = Guid.NewGuid(), PlayerId = Guid.NewGuid() }
+                    } 
+                }
+            };
+
+            // Cloning the queuedPlayersMap, because It will be manipulated by the code
+                Dictionary<int, List<QueuedPlayer>> queuedPlayersMapCp = new Dictionary<int, List<QueuedPlayer>>(queuedPlayersMap.Count, queuedPlayersMap.Comparer);
+                foreach (var latencyLevel in queuedPlayersMap.Keys)
+                {
+                    var list = new List<QueuedPlayer>();
+                    foreach (var qp in queuedPlayersMap[latencyLevel]) {
+                        list.Add(qp);
+                    }
+                    queuedPlayersMapCp[latencyLevel] = list;
+                }
+            //
+
+            _sessionRepositoryMock.Setup(repo => repo.CreateNewAsync(1, 0, It.IsAny<int>()))
+                                  .ReturnsAsync(new Session{});
+            _sessionRepositoryMock.Setup(repo => repo.CreateNewAsync(2, 0, It.IsAny<int>()))
+                                  .ReturnsAsync(new Session{});
+            _sessionRepositoryMock.Setup(repo => repo.AddPlayerToSessionAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                                  .ReturnsAsync(new SessionPlayer{});
+            _queuedPlayerRepositoryMock.Setup(repo => repo.DeleteQueuedPlayerAsync(It.IsAny<Guid>()))
+                                       .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _sessionMatchMaker.CreateSessionForRemainedPlayers(queuedPlayersMap);
+
+            // Assert
+            Assert.Equal(5, result.Count);
+            Assert.Equal(queuedPlayersMapCp[1][0].PlayerId, result[0]); // The first player of latency level of 1
+            Assert.Equal(queuedPlayersMapCp[1][1].PlayerId, result[1]); // The second player of latency level of 1
+            Assert.Equal(queuedPlayersMapCp[1][2].PlayerId, result[2]); // The third player of latency level of 1
+            Assert.Equal(queuedPlayersMapCp[2][0].PlayerId, result[3]); // The first player of latency level of 2
+            Assert.Equal(queuedPlayersMapCp[2][1].PlayerId, result[4]); // The second player of latency level of 2
         }
     }
 }
