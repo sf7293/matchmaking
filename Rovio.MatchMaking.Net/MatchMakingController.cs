@@ -10,6 +10,8 @@ public class MatchMakingController : Controller
     // Assuming there's already an injected service/repository to handle queuing
     private readonly IQueuedPlayerRepository _queuedPlayerRepository;
     private readonly ISessionRepository _sessionRepository;
+    private IQueuedPlayerRepository @object;
+
     public MatchMakingController(IQueuedPlayerRepository queuedPlayerRepository, ISessionRepository sessionRepository)
     {
         _queuedPlayerRepository = queuedPlayerRepository;

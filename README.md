@@ -174,3 +174,12 @@ To deploy the system into production, it is recommended to Dockerize the `Rovio.
      - Regularly archive and move old data to cold storage to maintain performance and manage database size.
 
 By following this strategy, the system can handle high loads efficiently, ensure resilience, and provide seamless scalability in a production environment.
+
+# Tests
+Tests are developed for the following modules:
+- `Rovio.MatchMaking.Net`
+- `Rovio.MatchMaking.Console`
+To run the tests, you can simply run the following cmd from root of the project:
+```
+dotnet test
+```
