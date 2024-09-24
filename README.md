@@ -1,3 +1,6 @@
+<div align="center">
+  ![Logo](./assets/logo.webp)
+</div>
 # Assumptions
 
 I have made the following assumptions:
