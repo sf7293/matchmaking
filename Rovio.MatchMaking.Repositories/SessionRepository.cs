@@ -57,6 +57,20 @@ public class SessionRepository : ISessionRepository
         return session;
     }
 
+    public async Task<Session> GetSessionById(Guid sessionId)
+    {
+        var session = await _context.Sessions.FindAsync(sessionId);
+        return session;
+    }
+
+    public async Task<IEnumerable<SessionPlayer>> GetSessionPlayersBySessionId(Guid sessionId)
+    {
+        var sessionPlayers = _context.SessionPlayers
+        .Where(sp => sp.SessionId == sessionId);
+
+        return await sessionPlayers.ToListAsync();
+    }
+
     public async Task<SessionPlayer> AddPlayerToSessionAsync(Guid sessionId, Guid playerId)
     {
         // Check if the session exists

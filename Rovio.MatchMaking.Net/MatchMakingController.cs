@@ -9,9 +9,11 @@ public class MatchMakingController : Controller
 {
     // Assuming there's already an injected service/repository to handle queuing
     private readonly IQueuedPlayerRepository _queuedPlayerRepository;
-    public MatchMakingController(IQueuedPlayerRepository queuedPlayerRepository)
+    private readonly ISessionRepository _sessionRepository;
+    public MatchMakingController(IQueuedPlayerRepository queuedPlayerRepository, ISessionRepository sessionRepository)
     {
         _queuedPlayerRepository = queuedPlayerRepository;
+        _sessionRepository = sessionRepository;
     }
 
     [HttpPost("queue")]
@@ -60,5 +62,34 @@ public class MatchMakingController : Controller
         await _queuedPlayerRepository.DeleteQueuedPlayerAsync(queuedPlayer.Id);
 
         return Ok(new { message = "Player dequeued successfully" });
+    }
+
+    [HttpPost("join")]
+    public async Task<IActionResult> JoinSession([FromBody] JoinSessionRequest requestBody)
+    {
+        if (requestBody == null)
+        {
+            return BadRequest(new { error = "Request body cannot be null" });
+        }
+
+        var session = await _sessionRepository.GetSessionById(requestBody.SessionId);
+        if (session == null) {
+            return BadRequest(new { error = "Invalid Session" });
+        }
+
+        // if (session.StartsAt > DateTime.UtcNow) {
+        //     return BadRequest(new { error = "Session hasn't been started yet!" });
+        // }
+
+        var sessionPlayers = await _sessionRepository.GetSessionPlayersBySessionId(requestBody.SessionId);
+        List<Guid> playerIdsList = new List<Guid>();
+        foreach (var sp in sessionPlayers) {
+            playerIdsList.Add(sp.PlayerId);
+        }
+        if (!playerIdsList.Contains(requestBody.PlayerId)) {
+            return BadRequest(new { error = "You don't have permission to join this session" });
+        }
+
+        return Ok(new { session = session, sessionPlayers = sessionPlayers });
     }
 }
